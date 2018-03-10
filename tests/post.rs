@@ -10,7 +10,7 @@ macro_rules! t {
     })
 }
 
-use curl::easy::{Easy, Form};
+use curl::easy::{Easy, Form, List};
 
 use server::Server;
 mod server;
@@ -40,6 +40,9 @@ Content-Disposition: form-data; name=\"foo\"\r\n\
     s.send("HTTP/1.1 200 OK\r\n\r\n");
 
     let mut handle = handle();
+    let mut list = List::new();
+    list.append("Expect: 100-continue").unwrap();
+    handle.http_headers(list).unwrap();
     let mut form = Form::new();
     t!(form.part("foo").contents(b"1234").add());
     t!(handle.url(&s.url("/")));
@@ -67,6 +70,9 @@ Content-Type: foo/bar\r\n\
     s.send("HTTP/1.1 200 OK\r\n\r\n");
 
     let mut handle = handle();
+    let mut list = List::new();
+    list.append("Expect: 100-continue").unwrap();
+    handle.http_headers(list).unwrap();
     let mut form = Form::new();
     t!(form.part("foo")
            .buffer("bar", b"1234".to_vec())
@@ -99,6 +105,9 @@ Content-Type: application/octet-stream\r\n\
     s.send("HTTP/1.1 200 OK\r\n\r\n");
 
     let mut handle = handle();
+    let mut list = List::new();
+    list.append("Expect: 100-continue").unwrap();
+    handle.http_headers(list).unwrap();
     let mut form = Form::new();
     t!(form.part("foo")
            .file("tests/formdata")
