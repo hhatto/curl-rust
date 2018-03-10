@@ -25,6 +25,7 @@ fn check_homebrews_curl() {
     let v = Version::get();
     if use_homebrew {
         assert!(v.version() != "7.54.0");
+        assert_eq!(v.version(), "7.58.0");
     } else {
         // bundled libcurl is 7.54.0 on macos10.12 and macos10.13
         assert!(v.version() == "7.54.0");
